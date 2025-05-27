@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TTT.com - Home</title>
+  <link href="https://fonts.googleapis.com/css2?family=Creepster&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+ <div class="logo">TTT.com</div>
+
+  <div class="fog-container" id="fogContainer"></div>
+
+    <audio id="backgroundMusic" loop>
+    <source src="assets/Demented-Nightmare-MP3(chosic.com).mp3" type="audio/mpeg">
+    <source src="assets/Demented-Nightmare-MP3(chosic.com).mp3" type="audio/ogg">
+    Your browser does not support the audio element.
+  </audio>
+
+  <div class="music-control" id="musicControl" onclick="toggleMusic()">
+    🔊
+  </div>
+
+
+
+  <div class="menu">
+    <li class="me"><a href="game.html">Play</a></li>
+    <li class="me"><a href="settings.html">Settings</a></li>
+    <li class="me"><a href="howtoplay.html">How to Play</a></li>
+    <li class="me"><a href="about.html">About</a></li>
+  </div>
+
+
+   <!-- Footer -->
+<a href="https://github.com/tabishfarhan7/TicTacToe" target="_blank" class="footer">
+    ❤️ Developed by Mohammad Tabish | GitHub Repo
+  </a>
+
+
+
+  
+ <script>
+    // Music Control Functions
+    let musicPlaying = false;
+    const music = document.getElementById('backgroundMusic');
+    const musicButton = document.getElementById('musicControl');
+
+    function toggleMusic() {
+      if (musicPlaying) {
+        music.pause();
+        musicButton.textContent = '🔇';
+        musicButton.classList.add('muted');
+        musicPlaying = false;
+      } else {
+        music.play().catch(e => {
+          console.log('Could not play music:', e);
+        });
+        musicButton.textContent = '🔊';
+        musicButton.classList.remove('muted');
+        musicPlaying = true;
+      }
+    }
+
+    // Auto-play music when page loads (with user interaction)
+    function initMusic() {
+      // Try to play music automatically
+      music.play().then(() => {
+        musicPlaying = true;
+        musicButton.textContent = '🔊';
+        console.log('Music started automatically');
+      }).catch(() => {
+        // If autoplay fails, show muted state
+        musicPlaying = false;
+        musicButton.textContent = '🔇';
+        musicButton.classList.add('muted');
+        console.log('Music autoplay blocked - click speaker to play');
+      });
+    }
+
+    // Create animated fog balls
+    function createFogBall() {
+      const fogBall = document.createElement('div');
+      fogBall.className = 'fog-ball';
+      
+      // Random size between 3px and 12px (smaller for subtlety)
+      const size = Math.random() * 9 + 3;
+      fogBall.style.width = size + 'px';
+      fogBall.style.height = size + 'px';
+      
+      // Random horizontal starting position
+      fogBall.style.left = Math.random() * 100 + '%';
+      
+      // Random animation duration between 8-18 seconds
+      const duration = Math.random() * 10 + 8;
+      fogBall.style.animationDuration = duration + 's';
+      
+      // Random delay before starting
+      const delay = Math.random() * 3;
+      fogBall.style.animationDelay = delay + 's';
+      
+      // Random horizontal drift
+      const drift = (Math.random() - 0.5) * 150;
+      fogBall.style.setProperty('--drift', drift + 'px');
+      
+      document.getElementById('fogContainer').appendChild(fogBall);
+      
+      // Remove the fog ball after animation completes
+      setTimeout(() => {
+        if (fogBall.parentNode) {
+          fogBall.parentNode.removeChild(fogBall);
+        }
+      }, (duration + delay) * 1000);
+    }
+
+    // Create fog balls continuously
+    function startFogEffect() {
+      // Create initial batch
+      for (let i = 0; i < 12; i++) {
+        setTimeout(() => createFogBall(), i * 400);
+      }
+      
+      // Continue creating fog balls
+      setInterval(createFogBall, 600);
+    }
+
+    // Start the fog effect when page loads
+    window.addEventListener('load', () => {
+      startFogEffect();
+      initMusic();
+    });
+  </script>
+</body>
+</html>
